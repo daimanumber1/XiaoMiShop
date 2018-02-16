@@ -3,21 +3,21 @@
     <el-row>
       <el-col :span="8">
         <a href="#">
-          <img src="/static/logo.png">
+          <img src="/static/logo.png" width="125px">
         </a>
       </el-col>
       <el-col :span="16" class="header-right">
-        <a href="" class="cart">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-gouwuche"></use>
-          </svg>
-          购物车
-        </a>
-        <a href="" class="login">
+        <a href="#" class="login">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-denglu"></use>
           </svg>
           login
+        </a>
+        <a href="#" class="cart">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-gouwuche"></use>
+          </svg>
+          购物车
         </a>
       </el-col>
     </el-row>
@@ -40,7 +40,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   /* 图标引用 */
-
   .icon {
     width: 1em;
     height: 1em;
@@ -48,13 +47,9 @@
     fill: currentColor;
     overflow: hidden;
   }
-  .el-row {
-    background: rgba(244, 247, 241, 0.356)
-  }
-
   .el-col {
-    height: 80px;
-    line-height: 80px;
+    height: 50px;
+    line-height: 50px;
   }
 
   .login {
@@ -69,6 +64,9 @@
     color: black;
     position: absolute;
     right: 50px
+  }
+  .login:hover,.cart:hover {
+    color: #d14371
   }
 
 </style>
