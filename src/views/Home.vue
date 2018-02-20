@@ -72,7 +72,7 @@ export default {
       axios
         .get("http://127.0.0.1:3000/home")
         .then(res => {
-          console.log(res)
+          // console.log(res)
           // console.log(res.data);
           this.products = res.data;
         })
