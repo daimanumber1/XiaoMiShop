@@ -42,7 +42,6 @@
 
 <script>
 import "element-ui/lib/theme-chalk/index.css";
-import "../assets/css/iconfont.js";
 import axios from "axios";
 import qs from "qs";
 export default {
@@ -133,13 +132,7 @@ export default {
 <style scoped>
 /* 图标引用 */
 
-.icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
+
 
 .el-col {
   height: 50px;

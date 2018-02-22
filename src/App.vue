@@ -5,6 +5,8 @@
 </template>
 
 <script>
+// 图标
+import "./assets/css/iconfont.js";
 
 export default {
   name: "App",
@@ -19,4 +21,11 @@ export default {
 </script>
 
 <style>
+/* 图标 */
+.icon {
+   width: 1em; height: 1em;
+   vertical-align: -0.15em;
+   fill: currentColor;
+   overflow: hidden;
+}
 </style>

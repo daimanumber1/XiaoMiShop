@@ -10,7 +10,7 @@ con.once("open", () => {
 let Schema = mongoose.Schema({
   pname: String,
   url: String,
-  price: String
+  price:  Number
 });
 let Model = mongoose.model("products", Schema);
 
@@ -25,11 +25,16 @@ module.exports.showIndex = (req, res, next) => {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Credentials": true
   });
-  console.log(req.session.username);
-  Model.find({}).exec((err, data) => {
-    // console.log(data);
-    res.send(data);
-  });
+  // console.log(req.session.username);
+  let sort = parseInt(req.param("sortFlag"));
+  console.log(sort);
+  console.log(typeof sort);
+  Model.find({})
+    .sort({ price: sort })
+    .exec((err, data) => {
+      // console.log(data);
+      res.send(data);
+    });
 };
 module.exports.doLogin = (req, res, next) => {
   res.set({
