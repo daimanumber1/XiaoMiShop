@@ -10,7 +10,7 @@ con.once("open", () => {
 let Schema = mongoose.Schema({
   pname: String,
   url: String,
-  price:  Number
+  price: Number
 });
 let Model = mongoose.model("products", Schema);
 
@@ -19,23 +19,54 @@ let Schema2 = mongoose.Schema({
   password: String
 });
 let Model2 = mongoose.model("users", Schema2);
-
+// 通过req的参数（升序降序、页数、价格区间）返回首页全部商品列表
 module.exports.showIndex = (req, res, next) => {
   res.set({
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Credentials": true
   });
   // console.log(req.session.username);
+  // 
   let sort = parseInt(req.param("sortFlag"));
-  console.log(sort);
-  console.log(typeof sort);
-  Model.find({})
-    .sort({ price: sort })
+  let priceIndex = req.param('priceIndex');
+  // 2个小细节  这里不能用let  因为下面switch  语句中  
+  // 修改数据后在findParams中priceGT和priceLt还是为''
+  var priceGt = '';
+  var priceLt = '';
+  let findParams = {};
+  if (priceIndex != '0') {
+    switch (priceIndex) {
+      case '1':
+        priceGt = 0.00;
+        priceLt = 100.00;
+        break;
+      case '2':
+        priceGt = 100.00;
+        priceLt = 500.00;
+        break;
+      case '3':
+        priceGt = 500.00;
+        priceLt = 1000.00;
+        break;
+    };
+    findParams = {
+      'price': {
+        $gt: priceGt,
+        $lt: priceLt
+      }
+    }
+  }
+  console.log(findParams);
+  Model.find(findParams)
+    .sort({
+      price: sort
+    })
     .exec((err, data) => {
       // console.log(data);
       res.send(data);
     });
 };
+// 登录按钮实现的功能  设置session
 module.exports.doLogin = (req, res, next) => {
   res.set({
     "Access-Control-Allow-Origin": "*",
@@ -43,7 +74,7 @@ module.exports.doLogin = (req, res, next) => {
   });
   // res.send("11111111111");
   var form = new formidable.IncomingForm();
-  form.parse(req, function(err, fields, files) {
+  form.parse(req, function (err, fields, files) {
     // console.log(fields);
     Model2.find(fields).exec((err, data) => {
       // console.log(data);
