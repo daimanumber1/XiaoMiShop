@@ -9,8 +9,8 @@
         <!-- 左侧导航栏 （价格区间） -->
         <el-col :span="4">
           <h4>&nbsp;&nbsp;&nbsp;P r i c e :</h4>
-          <el-menu default-active="2" class="el-menu-vertical-demo">
-            <el-menu-item index="0">
+          <el-menu default-active="0" class="el-menu-vertical-demo" background-color="#f5f5f5" text-color="#605f9e" active-text-color="#ee7a23">
+            <el-menu-item index="0" @click='doPriceFilter(0)'>
               <i class="el-icon-setting"></i>
               <span slot="title">All</span>
             </el-menu-item>
@@ -34,7 +34,7 @@
             </div>
             <!-- 全部的商品列表 -->
             <el-col :span="6" v-for='item in products' :key='item.id' id="row">
-              <a href="#">
+              <a href="#" class="productBox">
                 <img :src="'../../static/'+item.url">
                 <span>{{item.pname}}</span>
                 <p>
@@ -46,6 +46,17 @@
               </a>
             </el-col>
           </el-row>
+          <!-- loading 加载动画 -->
+          <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+            <el-table v-loading="loading" :data="tableData" style="width: 100%" v-show='isLoading' element-loading-background='#f5f5f5'>
+              <el-table-column prop="date" label="日期" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="姓名" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+            </el-table>
+          </div>
         </el-col>
       </div>
     </el-row>
@@ -56,152 +67,209 @@
 
 
 <script>
-import NavHeader from "@/components/NavHeader";
-import NavBreadcrumb from "@/components/NavBreadcrumb";
-import axios from "axios";
-export default {
-  name: "dddd",
-  data() {
-    return {
-      msg: "fuqiang",
-      // 接收/home返回的数据（全部商品）
-      products: [],
-      // 价格升序还是降序
-      sortFlag: true,
-      // 升序还是降序的图标
-      sortIcon: "#icon-paixu-shengxu",
-      // 导航栏的价格区间
-      priceFilters: [
-        {
-          startPrice: "0.00",
-          endPrice: "100.00"
-        },
-        {
-          startPrice: "100.00",
-          endPrice: "500.00"
-        },
-        {
-          startPrice: "500.00",
-          endPrice: "1000.00"
-        }
-      ],
-      // 导航栏价格的索引
-      priceIndex: 0
-    };
-  },
-  methods: {
-    //打开时默认的首页加载全部商品列表
-    getAllProducts() {
-      let obj = {
-        sortFlag: this.sortFlag ? 1 : -1,
-        priceIndex: this.priceIndex
+  import NavHeader from "@/components/NavHeader";
+  import NavBreadcrumb from "@/components/NavBreadcrumb";
+  import axios from "axios";
+  export default {
+    name: "dddd",
+    data() {
+      return {
+        msg: "fuqiang",
+        // 接收/home返回的数据（全部商品）
+        products: [],
+        // 价格升序还是降序
+        sortFlag: true,
+        // 升序还是降序的图标
+        sortIcon: "#icon-paixu-shengxu",
+        // 导航栏的价格区间
+        priceFilters: [{
+            startPrice: "0.00",
+            endPrice: "100.00"
+          },
+          {
+            startPrice: "100.00",
+            endPrice: "500.00"
+          },
+          {
+            startPrice: "500.00",
+            endPrice: "1000.00"
+          }
+        ],
+        // 导航栏价格的索引
+        priceIndex: 0,
+        // 页数
+        page: 1,
+        // 杂乱，无用的  loading 的数据
+        tableData: [{
+            date: "2016-05-03",
+            name: "王小虎",
+            address: "上海市普陀区金沙江路 1518 弄"
+          },
+          {
+            date: "2016-05-02",
+            name: "王小虎",
+            address: "上海市普陀区金沙江路 1518 弄"
+          },
+          {
+            date: "2016-05-04",
+            name: "王小虎",
+            address: "上海市普陀区金沙江路 1518 弄"
+          }
+        ],
+        loading: true,
+        // isLoading 为false则加载的动画不显示
+        isLoading: true,
+        // busy：如果此属性的值为true，则无限滚动将被禁用
+        busy: true,
+
       };
-      axios
-        .get("http://127.0.0.1:3000/home", {
-          params: obj
-        })
-        .then(res => {
-          // console.log(res)
-          // console.log(res.data);
-          this.products = res.data;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
-    // toggle价格降序以及升序
-    toggleSort() {
-      this.sortFlag = !this.sortFlag;
-      this.sortIcon =
-        this.sortIcon == "#icon-paixu-shengxu"
-          ? "#icon-paixu-jiangxu"
-          : "#icon-paixu-shengxu";
-      this.getAllProducts();
+    methods: {
+      //打开时默认的首页加载全部商品列表
+      getAllProducts(flag) {
+        let obj = {
+          sortFlag: this.sortFlag ? 1 : -1,
+          priceIndex: this.priceIndex,
+          page: this.page
+        };
+        this.isLoading = true;
+        //先禁止无限滚动
+        this.busy = true;
+        axios
+          .get("http://127.0.0.1:3000/home", {
+            params: obj
+          })
+          .then(res => {
+            // console.log(res);
+            if (flag) {
+              this.products = this.products.concat(res.data);
+              console.log(res.data);
+              //当无数据传回来 即res.data为空数组时与false做对比时则为true，
+              // 这是因为，空数组变为0，false变为0,两者在比较则为true
+              if (res.data == false) {
+                this.busy = true;
+                this.isLoading = false;
+              } else {
+                this.busy = false;
+              }
+            } else {
+              this.products = res.data;
+              this.busy = false;
+            }
+            // console.log(this.products)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      },
+      // toggle价格降序以及升序
+      toggleSort() {
+        this.sortFlag = !this.sortFlag;
+        this.sortIcon =
+          this.sortIcon == "#icon-paixu-shengxu" ?
+          "#icon-paixu-jiangxu" :
+          "#icon-paixu-shengxu";
+        this.getAllProducts();
+      },
+      //左侧导航栏的根据价格过滤
+      doPriceFilter(index) {
+        this.priceIndex = index;
+        this.getAllProducts();
+        console.log(index);
+      },
+      //无限加载的方法
+      loadMore() {
+        this.busy = true;
+        setTimeout(() => {
+          this.page++;
+          // this.busy = true;
+          this.getAllProducts(true);
+        }, 1000);
+      }
     },
-    //左侧导航栏的根据价格过滤
-    doPriceFilter(index) {
-      this.priceIndex = index;
+    components: {
+      NavHeader,
+      NavBreadcrumb
+    },
+    // 在页面还没有挂载前获得全部商品
+    mounted() {
       this.getAllProducts();
-      console.log(index);
     }
-  },
-  components: {
-    NavHeader,
-    NavBreadcrumb
-  },
-  // 在页面还没有挂载前获得全部商品
-  mounted() {
-    this.getAllProducts();
-  }
-};
+  };
+
 </script>
 <style scoped>
-.el-col > a > img {
-  width: 100%;
-  height: 240px;
-  padding: 0 8px;
-}
+  .el-col>a>img {
+    width: 100%;
+    height: 240px;
+    padding: 0 8px;
+  }
 
-.el-col > a {
-  display: block;
-  width: 240px;
-  border: 1px solid rgb(167, 158, 158);
-  overflow: hidden;
-  color: black;
-  text-decoration: none;
-}
+  .el-col>a {
+    display: block;
+    width: 240px;
+    border: 1px solid rgb(167, 158, 158);
+    overflow: hidden;
+    color: black;
+    text-decoration: none;
+  }
 
-.el-col > a > span {
-  display: block;
-  height: 50px;
-  line-height: 50px;
-  margin-left: 10px;
-}
+  .el-col>a>span {
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    margin-left: 10px;
+  }
 
-.el-col > a > p {
-  display: block;
-  height: 30px;
-  line-height: 30px;
-  margin-left: 10px;
-  color: #d1434a;
-  font-size: 18px;
-}
+  .el-col>a>p {
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    margin-left: 10px;
+    color: #d1434a;
+    font-size: 18px;
+  }
 
-.el-col > a > div {
-  width: 170px;
-  line-height: 40px;
-  height: 40px;
-  border: 1px solid #d1434a;
-  text-align: center;
-  margin: 0 auto 15px;
-  color: #d1434a;
-  font-weight: 600;
-  font-size: 14px;
-}
+  .el-col>a>div {
+    width: 170px;
+    line-height: 40px;
+    height: 40px;
+    border: 1px solid #d1434a;
+    text-align: center;
+    margin: 0 auto 15px;
+    color: #d1434a;
+    font-weight: 600;
+    font-size: 14px;
+  }
 
-.sortInfo {
-  /* background: #C0C4CC; */
-  height: 50px;
-  line-height: 50px;
-  text-align: right;
-  padding-right: 70px;
-  font-size: 17px;
-}
+  .sortInfo {
+    /* background: #C0C4CC; */
+    height: 50px;
+    line-height: 50px;
+    text-align: right;
+    padding-right: 70px;
+    font-size: 17px;
+  }
 
-.sortInfo > span {
-  font-size: 14px;
-}
+  .sortInfo>span {
+    font-size: 14px;
+  }
 
-.sortInfo a {
-  text-decoration: none;
-  /* color: black; */
-}
+  .sortInfo a {
+    text-decoration: none;
+    /* color: black; */
+  }
 
-h4 {
-  color: rgb(168, 158, 158);
-}
+  .productBox {
+    background: #ffffff;
+  }
 
-#row {
-  margin-bottom: 25px;
-}
+  h4 {
+    color: rgb(168, 158, 158);
+  }
+
+  #row {
+    margin-bottom: 25px;
+  }
+
 </style>

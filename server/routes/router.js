@@ -26,41 +26,46 @@ module.exports.showIndex = (req, res, next) => {
     "Access-Control-Allow-Credentials": true
   });
   // console.log(req.session.username);
-  // 
+  //
   let sort = parseInt(req.param("sortFlag"));
-  let priceIndex = req.param('priceIndex');
-  // 2个小细节  这里不能用let  因为下面switch  语句中  
+  let priceIndex = req.param("priceIndex");
+  let page = req.param("page");
+  let pageSize = 8;
+  let skipNumber = (page - 1) * pageSize;
+  // 2个小细节  这里不能用let  因为下面switch  语句中
   // 修改数据后在findParams中priceGT和priceLt还是为''
-  var priceGt = '';
-  var priceLt = '';
+  var priceGt = "";
+  var priceLt = "";
   let findParams = {};
-  if (priceIndex != '0') {
+  if (priceIndex != "0") {
     switch (priceIndex) {
-      case '1':
-        priceGt = 0.00;
-        priceLt = 100.00;
+      case "1":
+        priceGt = 0.0;
+        priceLt = 100.0;
         break;
-      case '2':
-        priceGt = 100.00;
-        priceLt = 500.00;
+      case "2":
+        priceGt = 100.0;
+        priceLt = 500.0;
         break;
-      case '3':
-        priceGt = 500.00;
-        priceLt = 1000.00;
+      case "3":
+        priceGt = 500.0;
+        priceLt = 1000.0;
         break;
-    };
+    }
     findParams = {
-      'price': {
+      price: {
         $gt: priceGt,
         $lt: priceLt
       }
-    }
+    };
   }
   console.log(findParams);
   Model.find(findParams)
     .sort({
       price: sort
     })
+    .limit(pageSize)
+    .skip(skipNumber)
     .exec((err, data) => {
       // console.log(data);
       res.send(data);
@@ -74,7 +79,7 @@ module.exports.doLogin = (req, res, next) => {
   });
   // res.send("11111111111");
   var form = new formidable.IncomingForm();
-  form.parse(req, function (err, fields, files) {
+  form.parse(req, function(err, fields, files) {
     // console.log(fields);
     Model2.find(fields).exec((err, data) => {
       // console.log(data);

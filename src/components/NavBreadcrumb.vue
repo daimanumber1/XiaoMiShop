@@ -31,7 +31,9 @@
     line-height: 50px;
     /* background: rgb(212, 202, 202); */
     font-size: 14px;
-    background: rgba(244, 247, 241, 0.356);
+    /* background: rgba(244, 247, 241, 0.356); */
+    background: #dee2ee;
+    padding-left: 30px
 
 }
 </style>
