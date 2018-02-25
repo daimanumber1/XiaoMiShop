@@ -21,12 +21,7 @@ let Schema2 = mongoose.Schema({
 let Model2 = mongoose.model("users", Schema2);
 // 通过req的参数（升序降序、页数、价格区间）返回首页全部商品列表
 module.exports.showIndex = (req, res, next) => {
-  res.set({
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": true
-  });
-  // console.log(req.session.username);
-  //
+  // console.log("Cookies: ", req.cookies);
   let sort = parseInt(req.param("sortFlag"));
   let priceIndex = req.param("priceIndex");
   let page = req.param("page");
@@ -59,7 +54,6 @@ module.exports.showIndex = (req, res, next) => {
       }
     };
   }
-  console.log(findParams);
   Model.find(findParams)
     .sort({
       price: sort
@@ -68,15 +62,14 @@ module.exports.showIndex = (req, res, next) => {
     .skip(skipNumber)
     .exec((err, data) => {
       // console.log(data);
-      res.send(data);
+      res.json({
+        list: data,
+        username: req.session.username
+      });
     });
 };
 // 登录按钮实现的功能  设置session
 module.exports.doLogin = (req, res, next) => {
-  res.set({
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": true
-  });
   // res.send("11111111111");
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files) {
@@ -94,4 +87,10 @@ module.exports.doLogin = (req, res, next) => {
       }
     });
   });
+};
+module.exports.checkLogin = (req, res, next) => {
+  console.log("session=" + req.session.username);
+  res.send({
+
+  })
 };

@@ -11,7 +11,7 @@
 
 <script>
   export default {
-    name: 'HelloWorld',
+    name: 'NavBreadcrumb',
     data() {
       return {
         // user: 'dddddddddddddddddddddddddddddddddd'

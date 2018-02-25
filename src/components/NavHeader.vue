@@ -41,124 +41,126 @@
 </template>
 
 <script>
-  import "element-ui/lib/theme-chalk/index.css";
-  import axios from "axios";
-  import qs from "qs";
-  export default {
-    name: "HelloWorld",
-    data() {
-      // 校验登录框的用户名是否为空
-      var validateUsername = (rule, value, callback) => {
-        if (value === "") {
-          callback(new Error("请输入用户名"));
-        } else {
-          callback();
-        }
-      };
-      // 校验登录框的密码是否为空
-      var validatePass = (rule, value, callback) => {
-        if (value === "") {
-          callback(new Error("请输入密码"));
-        } else {
-          callback();
-        }
-      };
-      return {
-        dialogFormVisible: false,
-        isLogin: 'login',
-        ruleForm2: {
-          username: "",
-          password: ""
-        },
-        rules2: {
-          username: [{
+import "element-ui/lib/theme-chalk/index.css";
+import axios from "axios";
+axios.defaults.withCredentials = true;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+import qs from "qs";
+export default {
+  name: "NavHeader",
+  data() {
+    // 校验登录框的用户名是否为空
+    var validateUsername = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入用户名"));
+      } else {
+        callback();
+      }
+    };
+    // 校验登录框的密码是否为空
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      dialogFormVisible: false,
+      isLogin: "login",
+      ruleForm2: {
+        username: "",
+        password: ""
+      },
+      rules2: {
+        username: [
+          {
             validator: validateUsername,
             trigger: "blur"
-          }],
-          password: [{
+          }
+        ],
+        password: [
+          {
             validator: validatePass,
             trigger: "blur"
-          }]
-        }
-      };
-    },
-    methods: {
-      // 登录框中的登录按钮（提交登录的表单）
-      submitForm(formName) {
-        this.$refs[formName].validate(valid => {
-          if (valid) {
-            let obj = {
-              username: this.ruleForm2.username,
-              password: this.ruleForm2.password
-            };
-            // console.log(obj);
-            axios
-              .post("http://127.0.0.1:3000/doLogin", qs.stringify(obj), {
-                headers: {
-                  "content-type": "application/x-www-form-urlencoded"
-                }
-              })
-              .then(res => {
-                console.log(res);
-                // 如果成功则跳转首页
-                if (res.data == 1) {
-                  // alert("11111111111");
-                  this.$notify({
-                    title: '成功',
-                    message: '这是一条成功的提示消息',
-                    type: 'success'
-                  });
-                  window.location = "";
-                } else if (res.data == 0) {
-                  this.resetForm(formName);
-                  alert("用户名或者密码错误请重新输入");
-                }
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          } else {
-            console.log("error submit!!");
-            return false;
           }
-        });
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+        ]
       }
+    };
+  },
+  methods: {
+    // 登录框中的登录按钮（提交登录的表单）
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let obj = {
+            username: this.ruleForm2.username,
+            password: this.ruleForm2.password
+          };
+          // var xhr = new XMLHttpRequest();
+          // xhr.withCredentials = true;
+          // console.log(obj);
+          axios
+            .post("http://127.0.0.1:3000/doLogin", qs.stringify(obj))
+            .then(res => {
+              console.log(res);
+              // 如果成功则跳转首页
+              if (res.data == 1) {
+                // alert("11111111111");
+                this.$notify({
+                  title: "成功",
+                  message: "这是一条成功的提示消息",
+                  type: "success"
+                });
+                window.location = "";
+              } else if (res.data == 0) {
+                this.resetForm(formName);
+                alert("用户名或者密码错误请重新输入");
+              }
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     }
-  };
-
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .mi {
-    padding-left: 30px
-  }
+.mi {
+  padding-left: 30px;
+}
 
-  .el-col {
-    height: 50px;
-    line-height: 50px;
-  }
+.el-col {
+  height: 50px;
+  line-height: 50px;
+}
 
-  .login {
-    text-decoration: none;
-    color: black;
-    position: absolute;
-    right: 150px;
-  }
+.login {
+  text-decoration: none;
+  color: black;
+  position: absolute;
+  right: 150px;
+}
 
-  .cart {
-    text-decoration: none;
-    color: black;
-    position: absolute;
-    right: 50px;
-  }
+.cart {
+  text-decoration: none;
+  color: black;
+  position: absolute;
+  right: 50px;
+}
 
-  .login:hover,
-  .cart:hover {
-    color: #d14371;
-  }
-
+.login:hover,
+.cart:hover {
+  color: #d14371;
+}
 </style>

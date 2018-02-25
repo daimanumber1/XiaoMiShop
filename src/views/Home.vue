@@ -47,7 +47,7 @@
             </el-col>
           </el-row>
           <!-- loading 加载动画 -->
-          <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+          <div class="ani" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
             <el-table v-loading="loading" :data="tableData" style="width: 100%" v-show='isLoading' element-loading-background='#f5f5f5'>
               <el-table-column prop="date" label="日期" width="180">
               </el-table-column>
@@ -70,11 +70,14 @@
   import NavHeader from "@/components/NavHeader";
   import NavBreadcrumb from "@/components/NavBreadcrumb";
   import axios from "axios";
+  axios.defaults.withCredentials = true;
+  import {
+    mapState
+  } from 'vuex';
   export default {
-    name: "dddd",
+    name: "Home",
     data() {
       return {
-        msg: "fuqiang",
         // 接收/home返回的数据（全部商品）
         products: [],
         // 价格升序还是降序
@@ -120,8 +123,7 @@
         // isLoading 为false则加载的动画不显示
         isLoading: true,
         // busy：如果此属性的值为true，则无限滚动将被禁用
-        busy: true,
-
+        busy: true
       };
     },
     methods: {
@@ -140,23 +142,24 @@
             params: obj
           })
           .then(res => {
-            // console.log(res);
+            console.log(res);
+            this.$store.commit('updateLoginName', res.data.username);
             if (flag) {
-              this.products = this.products.concat(res.data);
-              console.log(res.data);
-              //当无数据传回来 即res.data为空数组时与false做对比时则为true，
+              this.products = this.products.concat(res.data.list);
+              // console.log(res.data);
+              //当无数据传回来 即res.data.list为空数组时与false做对比时则为true，
               // 这是因为，空数组变为0，false变为0,两者在比较则为true
-              if (res.data == false) {
+              if (res.data.list == false) {
                 this.busy = true;
                 this.isLoading = false;
               } else {
                 this.busy = false;
               }
             } else {
-              this.products = res.data;
+              this.products = res.data.list;
               this.busy = false;
             }
-            // console.log(this.products)
+            // console.log(this.products);
           })
           .catch(function (error) {
             console.log(error);
@@ -165,17 +168,19 @@
       // toggle价格降序以及升序
       toggleSort() {
         this.sortFlag = !this.sortFlag;
+        this.page = 1;
         this.sortIcon =
           this.sortIcon == "#icon-paixu-shengxu" ?
           "#icon-paixu-jiangxu" :
           "#icon-paixu-shengxu";
-        this.getAllProducts();
+        this.getAllProducts(false);
       },
       //左侧导航栏的根据价格过滤
       doPriceFilter(index) {
         this.priceIndex = index;
+        this.page = 1;
         this.getAllProducts();
-        console.log(index);
+        // console.log(index);
       },
       //无限加载的方法
       loadMore() {
@@ -270,6 +275,11 @@
 
   #row {
     margin-bottom: 25px;
+  }
+
+  .ani {
+    width: 1110.83px;
+    height: 192px;
   }
 
 </style>
