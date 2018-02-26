@@ -5,6 +5,7 @@ import App from "./App";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import router from "./router";
+import axios from "axios";
 import Vuex from "vuex";
 import infiniteScroll from "vue-infinite-scroll";
 import store from "./vuex/store.js";
@@ -20,5 +21,18 @@ new Vue({
   components: {
     App
   },
-  template: "<App />"
+  template: "<App />",
+  methods: {
+    checkIsLogin() {
+      axios.get("http://127.0.0.1:3000/checkLogin").then(res => {
+        console.log(res);
+          if(res.data.username){
+            this.$store.commit('updateLoginName',res.data.username);
+          }
+      });
+    }
+  },
+  mounted() {
+    this.checkIsLogin();
+  }
 });

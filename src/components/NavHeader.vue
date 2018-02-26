@@ -7,12 +7,23 @@
         </a>
       </el-col>
       <el-col :span="16" class="header-right">
-        <a href="#" class="login" @click="dialogFormVisible = true">
-          <svg class="icon" aria-hidden="true">
+        <!-- 使用v-if判断是否登录 -->
+        <a href="#" class="login" @click="dialogFormVisible = true" v-if='!loginName'>
+        <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-denglu"></use>
           </svg>
-          {{isLogin}}
+          {{login}}
         </a>
+        <div class="login2" v-else>
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-denglu"></use>
+          </svg>
+          {{loginName}}
+          &nbsp;&nbsp;&nbsp;
+          <a href="#" @click='logout'>
+            <span>Logout</span>
+          </a>
+        </div>
         <!-- 弹出表单 -->
         <el-dialog title="登录" :visible.sync="dialogFormVisible">
           <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
@@ -28,7 +39,7 @@
             </el-form-item>
           </el-form>
         </el-dialog>
-        <!-- 购物车 -->
+        <!-- 购物车图标 -->
         <a href="#" class="cart">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-gouwuche"></use>
@@ -42,9 +53,11 @@
 
 <script>
 import "element-ui/lib/theme-chalk/index.css";
+import { mapState } from "vuex";
 import axios from "axios";
 axios.defaults.withCredentials = true;
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post["Content-Type"] =
+  "application/x-www-form-urlencoded";
 import qs from "qs";
 export default {
   name: "NavHeader",
@@ -66,8 +79,8 @@ export default {
       }
     };
     return {
+      login: "login",
       dialogFormVisible: false,
-      isLogin: "login",
       ruleForm2: {
         username: "",
         password: ""
@@ -127,9 +140,17 @@ export default {
         }
       });
     },
+    // 在登录框中的重置按钮
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    // 登出功能
+    logout() {
+      this.$store.commit("updateLoginName", "");
     }
+  },
+  computed: {
+    ...mapState(["loginName"])
   }
 };
 </script>
@@ -145,7 +166,8 @@ export default {
   line-height: 50px;
 }
 
-.login {
+.login,
+.login2 {
   text-decoration: none;
   color: black;
   position: absolute;
@@ -162,5 +184,9 @@ export default {
 .login:hover,
 .cart:hover {
   color: #d14371;
+}
+a {
+  text-decoration: none;
+  color: grey;
 }
 </style>

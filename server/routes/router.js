@@ -63,8 +63,8 @@ module.exports.showIndex = (req, res, next) => {
     .exec((err, data) => {
       // console.log(data);
       res.json({
-        list: data,
-        username: req.session.username
+        list: data
+        // username: req.session.username
       });
     });
 };
@@ -90,7 +90,10 @@ module.exports.doLogin = (req, res, next) => {
 };
 module.exports.checkLogin = (req, res, next) => {
   console.log("session=" + req.session.username);
-  res.send({
+  res.send({});
+};
 
-  })
+module.exports.checkLogin = (req, res, next) => {
+  let obj = { username: req.session.username };
+  res.send(obj);
 };

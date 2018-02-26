@@ -142,8 +142,6 @@
             params: obj
           })
           .then(res => {
-            console.log(res);
-            this.$store.commit('updateLoginName', res.data.username);
             if (flag) {
               this.products = this.products.concat(res.data.list);
               // console.log(res.data);
