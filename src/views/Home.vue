@@ -7,7 +7,7 @@
       <nav-breadcrumb></nav-breadcrumb>
       <div class="content">
         <!-- 左侧导航栏 （价格区间） -->
-        <el-col :span="4">
+        <el-col :span='5'>
           <h4>&nbsp;&nbsp;&nbsp;P r i c e :</h4>
           <el-menu default-active="0" class="el-menu-vertical-demo" background-color="#f5f5f5" text-color="#605f9e" active-text-color="#ee7a23">
             <el-menu-item index="0" @click='doPriceFilter(0)'>
@@ -21,8 +21,8 @@
           </el-menu>
         </el-col>
         <!-- 右侧主体部分 -->
-        <el-col :span='20'>
-          <el-row>
+        <el-col :span='18'>
+          <el-row :gutter="40">
             <!-- 价格排序栏 -->
             <div class="sortInfo">
               <span>Sort By: Default&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -33,14 +33,14 @@
               </a>
             </div>
             <!-- 全部的商品列表 -->
-            <el-col :span="6" v-for='item in products' :key='item.id' id="row">
+            <el-col class='list' :xs='24' :sm='8' :md='6' v-for='item in products' :key='item.id' id="row">
               <a href="#" class="productBox">
-                <img :src="'../../static/'+item.url">
+                <img :src="'../../static/'+item.url"> 
                 <span>{{item.pname}}</span>
                 <p>
                   ￥{{item.price}}
                 </p>
-                <div>
+                <div class="jiaru">
                   加入购物车
                 </div>
               </a>
@@ -73,7 +73,7 @@
   axios.defaults.withCredentials = true;
   import {
     mapState
-  } from 'vuex';
+  } from "vuex";
   export default {
     name: "Home",
     data() {
@@ -202,29 +202,30 @@
 
 </script>
 <style scoped>
-  .el-col>a>img {
+  .list>a>img {
+    display: inline-block;
     width: 100%;
-    height: 240px;
+    height: 235px;
     padding: 0 8px;
   }
 
-  .el-col>a {
+  .list>a {
+    width: 100%;
     display: block;
-    width: 240px;
     border: 1px solid rgb(167, 158, 158);
     overflow: hidden;
     color: black;
     text-decoration: none;
   }
 
-  .el-col>a>span {
+  .list>a>span {
     display: block;
     height: 50px;
     line-height: 50px;
     margin-left: 10px;
   }
 
-  .el-col>a>p {
+  .list>a>p {
     display: block;
     height: 30px;
     line-height: 30px;
@@ -233,8 +234,8 @@
     font-size: 18px;
   }
 
-  .el-col>a>div {
-    width: 170px;
+  .jiaru {
+    width: 70%;
     line-height: 40px;
     height: 40px;
     border: 1px solid #d1434a;

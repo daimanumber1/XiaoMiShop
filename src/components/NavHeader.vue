@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <el-row>
+    <el-row >
       <el-col :span="8" class="mi">
         <a href="#">
           <img src="/static/mi.png" width="50px">
@@ -8,22 +8,36 @@
       </el-col>
       <el-col :span="16" class="header-right">
         <!-- 使用v-if判断是否登录 -->
-        <a href="#" class="login" @click="dialogFormVisible = true" v-if='!loginName'>
-        <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-denglu"></use>
-          </svg>
-          {{login}}
-        </a>
-        <div class="login2" v-else>
-        <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-denglu"></use>
-          </svg>
-          {{loginName}}
-          &nbsp;&nbsp;&nbsp;
-          <a href="#" @click='logout'>
-            <span>Logout</span>
-          </a>
-        </div>
+        <el-row >
+            <el-col :span='3' :offset='18'>
+            <a href="#" class="login"   @click="dialogFormVisible = true" v-if='!loginName'>
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-denglu"></use>
+              </svg>
+              {{login}}
+            </a>
+            <div class="login2" v-else>
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-denglu"></use>
+              </svg>
+              {{loginName}}
+              &nbsp;&nbsp;&nbsp;
+              <a href="#" @click='logout'>
+                <span>Logout</span>
+              </a>
+            </div>
+            </el-col>
+            <!-- 购物车图标 -->
+            <el-col :span='3'>
+            <a href="#" class="cart">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-gouwuche"></use>
+              </svg>
+              购物车
+            </a>
+            </el-col>
+        </el-row>
+        
         <!-- 弹出表单 -->
         <el-dialog title="登录" :visible.sync="dialogFormVisible">
           <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
@@ -39,13 +53,7 @@
             </el-form-item>
           </el-form>
         </el-dialog>
-        <!-- 购物车图标 -->
-        <a href="#" class="cart">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-gouwuche"></use>
-          </svg>
-          购物车
-        </a>
+        
       </el-col>
     </el-row>
   </div>
@@ -164,21 +172,6 @@ export default {
 .el-col {
   height: 50px;
   line-height: 50px;
-}
-
-.login,
-.login2 {
-  text-decoration: none;
-  color: black;
-  position: absolute;
-  right: 150px;
-}
-
-.cart {
-  text-decoration: none;
-  color: black;
-  position: absolute;
-  right: 50px;
 }
 
 .login:hover,
