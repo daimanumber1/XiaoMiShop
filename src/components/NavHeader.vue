@@ -1,15 +1,15 @@
 <template>
   <div class="header">
     <el-row >
-      <el-col :span="8" class="mi">
+      <el-col :span="5" class="mi">
         <a href="#">
           <img src="/static/mi.png" width="50px">
         </a>
       </el-col>
-      <el-col :span="16" class="header-right">
+      <el-col :span="18" class="header-right">
         <!-- 使用v-if判断是否登录 -->
         <el-row >
-            <el-col :span='3' :offset='18'>
+            <el-col id='demo'>
             <a href="#" class="login"   @click="dialogFormVisible = true" v-if='!loginName'>
             <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-denglu"></use>
@@ -26,9 +26,7 @@
                 <span>Logout</span>
               </a>
             </div>
-            </el-col>
             <!-- 购物车图标 -->
-            <el-col :span='3'>
             <a href="#" class="cart">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-gouwuche"></use>
@@ -36,6 +34,9 @@
               购物车
             </a>
             </el-col>
+            <!-- <el-col :sm='3' :xs='6' >
+            
+            </el-col> -->
         </el-row>
         
         <!-- 弹出表单 -->
@@ -181,5 +182,10 @@ export default {
 a {
   text-decoration: none;
   color: grey;
+}
+#demo {
+  position: absolute;
+  width: 150px;
+  right: 5px
 }
 </style>

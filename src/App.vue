@@ -27,7 +27,13 @@ export default {
   fill: currentColor;
   overflow: hidden;
 }
-body{
-  background: #f5f5f5
+body {
+  background: #f5f5f5;
+}
+
+html,
+body {
+  overflow: hidden;
+  overflow-y: auto;
 }
 </style>

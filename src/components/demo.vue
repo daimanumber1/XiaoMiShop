@@ -1,8 +1,9 @@
 <template>
   <el-row  >
-     <el-col :span="12" class="row">
-dd
-     </el-col>
+    <div class="row">
+        dd
+        <img src="../../static/1.jpg" alt="">
+    </div>
   </el-row>
 </template>
 
@@ -14,6 +15,12 @@ export default {
 
 <style>
 .row {
+  width: 50%;
+  height: 0;
+  padding-bottom: 30%;
   background: red
+}
+img {
+  max-width: 100%;
 }
 </style>
