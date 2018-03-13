@@ -7,7 +7,7 @@
       <nav-breadcrumb></nav-breadcrumb>
       <div class="content">
         <!-- 左侧导航栏 （价格区间） -->
-        <el-col :span='5'>
+        <el-col :span='5' :xs='24'>
           <h4>&nbsp;&nbsp;&nbsp;P r i c e :</h4>
           <el-menu default-active="0" class="el-menu-vertical-demo" background-color="#f5f5f5" text-color="#605f9e" active-text-color="#ee7a23">
             <el-menu-item index="0" @click='doPriceFilter(0)'>
@@ -21,7 +21,7 @@
           </el-menu>
         </el-col>
         <!-- 右侧主体部分 -->
-        <el-col :span='18'>
+        <el-col :span='18' :xs='24'>
           <el-row :gutter="40">
             <!-- 价格排序栏 -->
             <div class="sortInfo">
@@ -47,7 +47,7 @@
             </el-col>
           </el-row>
           <!-- loading 加载动画 -->
-          <div class="ani" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+          <el-col :xs='24' class="ani" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
             <el-table v-loading="loading" :data="tableData" style="width: 100%" v-show='isLoading' element-loading-background='#f5f5f5'>
               <el-table-column prop="date" label="日期" width="180">
               </el-table-column>
@@ -56,7 +56,7 @@
               <el-table-column prop="address" label="地址">
               </el-table-column>
             </el-table>
-          </div>
+          </el-col>
         </el-col>
       </div>
     </el-row>
@@ -185,7 +185,6 @@ export default {
       this.busy = true;
       setTimeout(() => {
         this.page++;
-        // this.busy = true;
         this.getAllProducts(true);
       }, 1000);
     }
@@ -202,10 +201,7 @@ export default {
 </script>
 <style scoped>
 .list > a > img {
-  display: inline-block;
-  /* width: 100%; */
-  max-width: 100%;
-  height: 235px;
+  width: 100%;
   padding: 0 8px;
 }
 
@@ -220,8 +216,8 @@ export default {
 
 .list > a > span {
   display: block;
-  height: 50px;
-  line-height: 50px;
+  height: 30px;
+  line-height: 30px;
   margin-left: 10px;
 }
 
@@ -277,7 +273,20 @@ h4 {
 }
 
 .ani {
-  width: 1110.83px;
   height: 192px;
+}
+@media screen and (max-width: 768px) {
+  .list > a > img{
+    width: 20%;
+  }
+  /* .list > a{
+
+  } */
+  .list > a > span {
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  margin-left: 10px;
+}
 }
 </style>
